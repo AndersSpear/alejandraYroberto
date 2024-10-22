@@ -1,5 +1,6 @@
 # Alex Jian Zheng
 import random
+import pyshark
 import math
 import torch
 import torch.nn as nn
@@ -36,7 +37,12 @@ class SportsDataset(Dataset):
 #     return vocab
 
 def pcap_to_lengths(pcap_file) -> [int]:
-    exit()
+    length = []
+    capture = pyshark.FileCapture(pcap_file)
+    for packet in capture:
+        length.append(packet.length)
+
+    return length
 
 def lengths_to_tokens(lengths: [int]) -> [int]:
     exit()
