@@ -34,13 +34,59 @@ class SportsDataset(Dataset):
 #     vocab = [str(x).split("\t")[0] for x in vocab_file.readlines() if '\t' in x]
 #     print("Loaded vocab with %i terms" % len(vocab))
 #     return vocab
-    
-def read_dataset(positive, negative):
+
+def pcap_to_lengths(pcap_file) -> [int]:
+    exit()
+
+def lengths_to_tokens(lengths: [int]) -> [int]:
+    exit()
+
+def tokens_to_tuples(tokens: [int]) -> [(int, int, int, int)]:
+    exit()
+
+def count_tuples(words: [(int, int, int, int)],
+                 vocab: {(int, int, int, int): int}) -> {int: int}:
+    exit()
+
+
+
+def read_dataset(lang1, lang2):
     """
     Create a pytorch SportsDataset for the train and test data.
 
-    :param positive: Positive examples file pointer
-    :param negative: Negative examples file pointer
+    :param lang1: list of pcap files of lang1
+    :param negative: list of pcap files of lang2
+
+    turn each pcap file into a list of individual packet lengths
+    identify the lengths that each token represents
+    turn each list of packet lengths into a list of tokens
+    create a list of 4-tuples of tokens in each pcap file.
+
+
+
+    create lengths1 and lengths2
+    length1: list of lists of lengths
+
+    tokens =
+    [
+    s token representing two smallest lengths,
+    m token representing middle lengths,
+    l token representing largest length
+    ]
+
+    vocab =
+    [
+    (s, s, s, s), (s, s, s, m), (s, s, m, m),
+]
+
+
+
+
+    [m, s, s, s, m, l, m, s, m, m]
+    (m, s, s, s), (s, s, s, m), (s, s, m, l), (s, m, l, m)
+
+
+
     :param vocab: Vocabulary words file pointer
     """
 

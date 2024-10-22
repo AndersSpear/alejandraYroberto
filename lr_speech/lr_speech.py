@@ -42,7 +42,31 @@ def list_files(directory, vowels):
 
     return soundfile_dict
 
+
+def create_dataset(pcap_dict, languages, num_mfccs):
+    """
+    pcap_dict:
+    list of pcap files for each language
+    {
+    "en":
+    [enpcap1, enpcap2, pcap3]
+    "null":
+    [nullpcap1, nullpcap2]
+    }
+
+
+    languages :
+    list of pcap types in our dict
+    ["en", "es"]
+    ["en", "null"]
+
+
+
+
+    """
+
 def create_dataset(soundfile_dict, vowels, num_mfccs):
+
     """
     Read in wav files, and return a 2-D numpy array that contains your
     speech dataset.
