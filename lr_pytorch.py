@@ -179,6 +179,18 @@ if __name__ == "__main__":
     args = argparser.parse_args()
 
     sportsdata = read_dataset(open(args.positive), open(args.negative), open(args.vocab))
+    """
+    each row is the count of each 
+    first column is the language type
+    
+    """
+    sportsdata = np.array([
+      [0, 0, 3, 5, 123, 6, 765, 987, 23, 34, 654, 76],
+      [0, 5, 32, 12, 4, 11, 76, 8, 43, 2, 6, 1],
+      [1, 12, 3, 5, 123, 6, 75, 87, 23, 34, 64, 76],
+      [1, 69, 32, 112, 544, 12, 76, 9, 43, 2, 6, 1221],
+    ])
+
     train_np, test_np = train_test_split(sportsdata, test_size=0.15, random_state=1234)
     train, test = SportsDataset(train_np), SportsDataset(test_np)
 
