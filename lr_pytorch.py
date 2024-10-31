@@ -66,10 +66,14 @@ def lengths_to_tokens(lengths: [int]) -> [int]:
     
     return lengths
 
-    
-
 def tokens_to_tuples(tokens: [int]) -> [(int, int, int, int)]:
-    exit()
+    tuples = []
+    i = 0
+    while i + 3 < len(tokens):
+        tuples.append((tokens[i], tokens[i+1], tokens[i+2], tokens[i+3]))
+
+    return tuples
+
 
 def count_tuples(words: [(int, int, int, int)],
                  vocab: {(int, int, int, int): int}) -> {int: int}:
@@ -82,7 +86,7 @@ def read_dataset(lang1, lang2):
     Create a pytorch SportsDataset for the train and test data.
 
     :param lang1: list of pcap files of lang1
-    :param negative: list of pcap files of lang2
+    :param lang2: list of pcap files of lang2
 
     turn each pcap file into a list of individual packet lengths
     identify the lengths that each token represents
