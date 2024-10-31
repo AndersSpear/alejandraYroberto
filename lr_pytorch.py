@@ -71,6 +71,7 @@ def tokens_to_tuples(tokens: [int]) -> [(int, int, int, int)]:
     i = 0
     while i + 3 < len(tokens):
         tuples.append((tokens[i], tokens[i+1], tokens[i+2], tokens[i+3]))
+        i = i+1
 
     return tuples
 
