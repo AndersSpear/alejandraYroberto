@@ -45,7 +45,28 @@ def pcap_to_lengths(pcap_file) -> [int]:
     return length
 
 def lengths_to_tokens(lengths: [int]) -> [int]:
-    exit()
+    # 0 = 2 smallest
+    # 2 = largest length
+    # 1 = everything else
+
+    lengths_mod = lengths
+    lengths_mod.remove(min(lengths_mod))
+
+    min_length2 = min(lengths_mod) # second smallest
+    min_length = min(lengths)      # smallest  
+    max_length = max(lengths)      # largest
+
+    for i in range(len(lengths)):
+        if lengths[i] == min_length or lengths[i] == min_length:
+            lengths[i] = 0
+        elif lengths[i] == max_length:
+            lengths[i] == 2
+        else:
+            lengths[i] == 1
+    
+    return lengths
+
+    
 
 def tokens_to_tuples(tokens: [int]) -> [(int, int, int, int)]:
     exit()
@@ -75,14 +96,14 @@ def read_dataset(lang1, lang2):
 
     tokens =
     [
-    s token representing two smallest lengths,
-    m token representing middle lengths,
-    l token representing largest length
+    0 token representing two smallest lengths,
+    1 token representing middle lengths,
+    2 token representing largest length
     ]
 
     vocab =
     [
-    (s, s, s, s), (s, s, s, m), (s, s, m, m),
+    (0, 0, 0, 0), (0, 0, 0, 1), (0, 0, 1, 1),
 ]
 
 
