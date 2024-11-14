@@ -170,9 +170,6 @@ def step(epoch, ex, model, optimizer, criterion, inputs, labels):
     # C) backprop
     # D) update the parameters
 
-    # There's additional code to print updates (for good software
-    # engineering practices, this should probably be logging, but
-    # printing is good enough for a homework).
     optimizer.zero_grad()
     prediction = model(inputs)
     loss = criterion(prediction, labels)

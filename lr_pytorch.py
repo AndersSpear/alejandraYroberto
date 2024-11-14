@@ -146,8 +146,7 @@ class SimpleLogreg(nn.Module):
         :param num_features: The number of features in the linear model
         """
         super(SimpleLogreg, self).__init__()
-        # Replace this with a real nn.Module
-        self.linear = None
+        self.linear = nn.Linear(num_features, 1)
 
     def forward(self, x):
         """
@@ -155,7 +154,7 @@ class SimpleLogreg(nn.Module):
 
         :param x: Example to evaluate
         """
-        return 0.5
+        return torch.sigmoid(self.linear(x))
 
     def evaluate(self, data):
         with torch.no_grad():
@@ -175,20 +174,25 @@ class SimpleLogreg(nn.Module):
 
 def step(epoch, ex, model, optimizer, criterion, inputs, labels):
     """Take a single step of the optimizer, we factored it into a single
-    function so we could write tests.  You should: A) get predictions B)
-    compute the loss from that prediction C) backprop D) update the
-    parameters
+    function so we could write tests.
 
-    There's additional code to print updates (for good software
-    engineering practices, this should probably be logging, but printing
-    is good enough for a homework).
 
     :param epoch: The current epoch
     :param ex: Which example / minibatch you're one
     :param model: The model you're optimizing
     :param inputs: The current set of inputs
     :param labels: The labels for those inputs
+
+    A) get predictions
+    B) compute the loss from that prediction
+    C) backprop
+    D) update the parameters
     """
+    optimizer.zero_grad()
+    prediction = model(inputs)
+    loss = criterion(prediction, labels)
+    loss.backward()
+    optimizer.step()
 
     if (ex+1) % 20 == 0:
       acc_train = model.evaluate(train)
