@@ -15,6 +15,9 @@ import argparse
 
 torch.manual_seed(1701)
 
+vocab = [('s', 's', 's', 's'), ('s', 's', 's', 'm'), ('s', 's', 's', 'l'), ('s', 's', 'm', 's'), ('s', 's', 'm', 'm'), ('s', 's', 'm', 'l'), ('s', 's', 'l', 's'), ('s', 's', 'l', 'm'), ('s', 's', 'l', 'l'), ('s', 'm', 's', 's'), ('s', 'm', 's', 'm'), ('s', 'm', 's', 'l'), ('s', 'm', 'm', 's'), ('s', 'm', 'm', 'm'), ('s', 'm', 'm', 'l'), ('s', 'm', 'l', 's'), ('s', 'm', 'l', 'm'), ('s', 'm', 'l', 'l'), ('s', 'l', 's', 's'), ('s', 'l', 's', 'm'), ('s', 'l', 's', 'l'), ('s', 'l', 'm', 's'), ('s', 'l', 'm', 'm'), ('s', 'l', 'm', 'l'), ('s', 'l', 'l', 's'), ('s', 'l', 'l', 'm'), ('s', 'l', 'l', 'l'), ('m', 's', 's', 's'), ('m', 's', 's', 'm'), ('m', 's', 's', 'l'), ('m', 's', 'm', 's'), ('m', 's', 'm', 'm'), ('m', 's', 'm', 'l'), ('m', 's', 'l', 's'), ('m', 's', 'l', 'm'), ('m', 's', 'l', 'l'), ('m', 'm', 's', 's'), ('m', 'm', 's', 'm'), ('m', 'm', 's', 'l'), ('m', 'm', 'm', 's'), ('m', 'm', 'm', 'm'), ('m', 'm', 'm', 'l'), ('m', 'm', 'l', 's'), ('m', 'm', 'l', 'm'), ('m', 'm', 'l', 'l'), ('m', 'l', 's', 's'), ('m', 'l', 's', 'm'), ('m', 'l', 's', 'l'), ('m', 'l', 'm', 's'), ('m', 'l', 'm', 'm'), ('m', 'l', 'm', 'l'), ('m', 'l', 'l', 's'), ('m', 'l', 'l', 'm'), ('m', 'l', 'l', 'l'), ('l', 's', 's', 's'), ('l', 's', 's', 'm'), ('l', 's', 's', 'l'), ('l', 's', 'm', 's'), ('l', 's', 'm', 'm'), ('l', 's', 'm', 'l'), ('l', 's', 'l', 's'), ('l', 's', 'l', 'm'), ('l', 's', 'l', 'l'), ('l', 'm', 's', 's'), ('l', 'm', 's', 'm'), ('l', 'm', 's', 'l'), ('l', 'm', 'm', 's'), ('l', 'm', 'm', 'm'), ('l', 'm', 'm', 'l'), ('l', 'm', 'l', 's'), ('l', 'm', 'l', 'm'), ('l', 'm', 'l', 'l'), ('l', 'l', 's', 's'), ('l', 'l', 's', 'm'), ('l', 'l', 's', 'l'), ('l', 'l', 'm', 's'), ('l', 'l', 'm', 'm'), ('l', 'l', 'm', 'l'), ('l', 'l', 'l', 's'), ('l', 'l', 'l', 'm'), ('l', 'l', 'l', 'l')]
+
+
 class SportsDataset(Dataset):
     def __init__(self, data):
         self.n_samples, self.n_features = data.shape
@@ -191,6 +194,8 @@ def step(epoch, ex, model, optimizer, criterion, inputs, labels):
       acc_train = model.evaluate(train)
       acc_test = model.evaluate(test)
       print(f'Epoch: {epoch+1}/{num_epochs}, Example {ex}, loss = {loss.item():.4f}, train_acc = {acc_train.item():.4f} test_acc = {acc_test.item():.4f}')
+
+
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
