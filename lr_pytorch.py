@@ -154,12 +154,12 @@ def read_dataset(lang1, lang2):
     lang2_tokens = map(lengths_to_tokens, lang2_lengths)
 
     # convert tokens to tuples
-    lang1_tuples = tokens_to_tuples(lang1_tokens)
-    lang2_tuples = tokens_to_tuples(lang2_tokens)
+    lang1_tuples = map(tokens_to_tuples, lang1_tokens)
+    lang2_tuples = map(tokens_to_tuples, lang2_tokens)
 
     # convert tuples to counts of each sample to insert into matrix -> [{int: int}]
-    lang1_counts = map(tokens_to_tuples, lang1_tokens)
-    lang2_counts = map(tokens_to_tuples, lang2_tokens)
+    lang1_counts = map(count_tuples, lang1_tuples)
+    lang2_counts = map(count_tuples, lang2_tuples)
 
     # create the matrix
     for i in range(len(vocab)): 
