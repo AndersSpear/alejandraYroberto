@@ -1,4 +1,5 @@
 # Alex Jian Zheng
+from pathlib import Path
 import random
 import pyshark
 import math
@@ -15,7 +16,20 @@ import argparse
 
 torch.manual_seed(1701)
 
-vocab = [('s', 's', 's', 's'), ('s', 's', 's', 'm'), ('s', 's', 's', 'l'), ('s', 's', 'm', 's'), ('s', 's', 'm', 'm'), ('s', 's', 'm', 'l'), ('s', 's', 'l', 's'), ('s', 's', 'l', 'm'), ('s', 's', 'l', 'l'), ('s', 'm', 's', 's'), ('s', 'm', 's', 'm'), ('s', 'm', 's', 'l'), ('s', 'm', 'm', 's'), ('s', 'm', 'm', 'm'), ('s', 'm', 'm', 'l'), ('s', 'm', 'l', 's'), ('s', 'm', 'l', 'm'), ('s', 'm', 'l', 'l'), ('s', 'l', 's', 's'), ('s', 'l', 's', 'm'), ('s', 'l', 's', 'l'), ('s', 'l', 'm', 's'), ('s', 'l', 'm', 'm'), ('s', 'l', 'm', 'l'), ('s', 'l', 'l', 's'), ('s', 'l', 'l', 'm'), ('s', 'l', 'l', 'l'), ('m', 's', 's', 's'), ('m', 's', 's', 'm'), ('m', 's', 's', 'l'), ('m', 's', 'm', 's'), ('m', 's', 'm', 'm'), ('m', 's', 'm', 'l'), ('m', 's', 'l', 's'), ('m', 's', 'l', 'm'), ('m', 's', 'l', 'l'), ('m', 'm', 's', 's'), ('m', 'm', 's', 'm'), ('m', 'm', 's', 'l'), ('m', 'm', 'm', 's'), ('m', 'm', 'm', 'm'), ('m', 'm', 'm', 'l'), ('m', 'm', 'l', 's'), ('m', 'm', 'l', 'm'), ('m', 'm', 'l', 'l'), ('m', 'l', 's', 's'), ('m', 'l', 's', 'm'), ('m', 'l', 's', 'l'), ('m', 'l', 'm', 's'), ('m', 'l', 'm', 'm'), ('m', 'l', 'm', 'l'), ('m', 'l', 'l', 's'), ('m', 'l', 'l', 'm'), ('m', 'l', 'l', 'l'), ('l', 's', 's', 's'), ('l', 's', 's', 'm'), ('l', 's', 's', 'l'), ('l', 's', 'm', 's'), ('l', 's', 'm', 'm'), ('l', 's', 'm', 'l'), ('l', 's', 'l', 's'), ('l', 's', 'l', 'm'), ('l', 's', 'l', 'l'), ('l', 'm', 's', 's'), ('l', 'm', 's', 'm'), ('l', 'm', 's', 'l'), ('l', 'm', 'm', 's'), ('l', 'm', 'm', 'm'), ('l', 'm', 'm', 'l'), ('l', 'm', 'l', 's'), ('l', 'm', 'l', 'm'), ('l', 'm', 'l', 'l'), ('l', 'l', 's', 's'), ('l', 'l', 's', 'm'), ('l', 'l', 's', 'l'), ('l', 'l', 'm', 's'), ('l', 'l', 'm', 'm'), ('l', 'l', 'm', 'l'), ('l', 'l', 'l', 's'), ('l', 'l', 'l', 'm'), ('l', 'l', 'l', 'l')]
+vocab = [[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 2], [0, 0, 1, 0], [0, 0, 1, 1], [0, 0, 1, 2],
+ [0, 0, 2, 0], [0, 0, 2, 1], [0, 0, 2, 2], [0, 1, 0, 0], [0, 1, 0, 1], [0, 1, 0, 2],
+ [0, 1, 1, 0], [0, 1, 1, 1], [0, 1, 1, 2], [0, 1, 2, 0], [0, 1, 2, 1], [0, 1, 2, 2],
+ [0, 2, 0, 0], [0, 2, 0, 1], [0, 2, 0, 2], [0, 2, 1, 0], [0, 2, 1, 1], [0, 2, 1, 2],
+ [0, 2, 2, 0], [0, 2, 2, 1], [0, 2, 2, 2], [1, 0, 0, 0], [1, 0, 0, 1], [1, 0, 0, 2],
+ [1, 0, 1, 0], [1, 0, 1, 1], [1, 0, 1, 2], [1, 0, 2, 0], [1, 0, 2, 1], [1, 0, 2, 2],
+ [1, 1, 0, 0], [1, 1, 0, 1], [1, 1, 0, 2], [1, 1, 1, 0], [1, 1, 1, 1], [1, 1, 1, 2],
+ [1, 1, 2, 0], [1, 1, 2, 1], [1, 1, 2, 2], [1, 2, 0, 0], [1, 2, 0, 1], [1, 2, 0, 2],
+ [1, 2, 1, 0], [1, 2, 1, 1], [1, 2, 1, 2], [1, 2, 2, 0], [1, 2, 2, 1], [1, 2, 2, 2],
+ [2, 0, 0, 0], [2, 0, 0, 1], [2, 0, 0, 2], [2, 0, 1, 0], [2, 0, 1, 1], [2, 0, 1, 2],
+ [2, 0, 2, 0], [2, 0, 2, 1], [2, 0, 2, 2], [2, 1, 0, 0], [2, 1, 0, 1], [2, 1, 0, 2],
+ [2, 1, 1, 0], [2, 1, 1, 1], [2, 1, 1, 2], [2, 1, 2, 0], [2, 1, 2, 1], [2, 1, 2, 2],
+ [2, 2, 0, 0], [2, 2, 0, 1], [2, 2, 0, 2], [2, 2, 1, 0], [2, 2, 1, 1], [2, 2, 1, 2],
+ [2, 2, 2, 0], [2, 2, 2, 1], [2, 2, 2, 2]]
 
 
 class SportsDataset(Dataset):
@@ -79,25 +93,26 @@ def tokens_to_tuples(tokens: [int]) -> [(int, int, int, int)]:
     return tuples
 
 
-def count_tuples(words: [(int, int, int, int)],
-                 vocab: {(int, int, int, int): int}) -> {int: int}:
-    exit()
+def count_tuples(words: [(int, int, int, int)]) -> {int: int}:
+    # return type is {int: int} where key is index of tuple in vocab and value is the count
+    count = {}
+    for i in range(len(vocab)):
+        count[i] = words.count(vocab[i])
 
+    return count
 
 
 def read_dataset(lang1, lang2):
     """
-    Create a pytorch SportsDataset for the train and test data.
+    :param lang1: directory names of pcap files of lang1 (string)
+    :param lang2: directory names of pcap files of lang2 (string)
 
-    :param lang1: list of pcap files of lang1
-    :param lang2: list of pcap files of lang2
+    read in files and create a list of pcap files of each language
 
     turn each pcap file into a list of individual packet lengths
     identify the lengths that each token represents
     turn each list of packet lengths into a list of tokens
     create a list of 4-tuples of tokens in each pcap file.
-
-
 
     create lengths1 and lengths2
     length1: list of lists of lengths
@@ -111,32 +126,56 @@ def read_dataset(lang1, lang2):
 
     vocab =
     [
-    (0, 0, 0, 0), (0, 0, 0, 1), (0, 0, 1, 1),
-]
-
-
-
+    (0, 0, 0, 0), (0, 0, 0, 1), (0, 0, 1, 1), ...]
 
     [m, s, s, s, m, l, m, s, m, m]
     (m, s, s, s), (s, s, s, m), (s, s, m, l), (s, m, l, m)
 
+    matrix will be a 2D array where each row is a sample file and columns are class(language), the 81 columns
+    of the count in vocab
 
-
-    :param vocab: Vocabulary words file pointer
     """
+    directory1 = Path("path/to/" + lang1)
+    directory2 = Path("path/to/" + lang2) 
 
-    # You'll need to change the below line, since you can't assume
-    # that you have five documents in your dataset.
-    num_docs = 5
-    num_docs = len(positive.readlines()) + len(negative.readlines())       
-    positive.seek(0)                                                       
-    negative.seek(0)
+    matrix = [] # 2D array
 
-    sportsdata = zeros((num_docs, len(vocab)))
-    print("Created datasets with %i rows and some columns" % (num_docs)
+    # read in every .pcap file in directories lang1 and lang2 into a list
 
+    pcap_files1 = [file for file in directory1.iterdir()]
+    pcap_files2 = [file for file in directory2.iterdir()]
 
-    return sportsdata
+    # convert pcaps to lengths
+    lang1_lengths = map(pcap_to_lengths, pcap_files1)
+    lang2_lengths = map(pcap_to_lengths, pcap_files2)
+
+    # convert lengths to tokens
+    lang1_tokens = map(lengths_to_tokens, lang1_lengths)
+    lang2_tokens = map(lengths_to_tokens, lang2_lengths)
+
+    # convert tokens to tuples
+    lang1_tuples = tokens_to_tuples(lang1_tokens)
+    lang2_tuples = tokens_to_tuples(lang2_tokens)
+
+    # convert tuples to counts of each sample to insert into matrix -> [{int: int}]
+    lang1_counts = map(tokens_to_tuples, lang1_tokens)
+    lang2_counts = map(tokens_to_tuples, lang2_tokens)
+
+    # create the matrix
+    for i in range(len(vocab)): 
+        sample_count1 = [0] * (len(vocab) + 1)
+        sample_count2 = [0] * (len(vocab) + 1)
+        # class = 0 for lang1, class = 1 for lang2
+        sample_count2[0] = 1
+
+        sample_count1[i + 1] = lang1_counts[i]
+        sample_count2[i + 1] = lang2_counts[i]
+
+        # add both arrays to the matrix
+        matrix.append(sample_count1)
+        matrix.append(sample_count2)
+    
+    return matrix
 
 class SimpleLogreg(nn.Module):
     def __init__(self, num_features):
