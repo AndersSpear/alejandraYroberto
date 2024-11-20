@@ -134,8 +134,8 @@ def read_dataset(lang1, lang2):
 
     # read in every .pcap file in directories lang1 and lang2 into a list
 
-    pcap_files1 = [file for file in directory1.iterdir()]
-    pcap_files2 = [file for file in directory2.iterdir()]
+    pcap_files1 = list(directory1.glob('*.pcapng'))
+    pcap_files2 = list(directory2.glob('*.pcapng'))
 
     # convert pcaps to lengths
     lang1_lengths = [pcap_to_lengths(f) for f in pcap_files1]
