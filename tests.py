@@ -5,7 +5,7 @@ import torch
 from torch.nn import BCELoss as Loss
 from torch.optim import SGD as Opt
 
-from lr_pytorch import SportsDataset, read_dataset, step, SimpleLogreg
+from lr_pytorch import read_dataset, step, SimpleLogreg
 from numpy import array
 
 vocab = tempfile.TemporaryFile(mode='r+', encoding="utf-8")

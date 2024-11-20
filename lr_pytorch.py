@@ -1,14 +1,9 @@
 # Alex Jian Zheng
 from pathlib import Path
-import random
 import pyshark
-import math
 import torch
 import torch.nn as nn
 import numpy as np
-from numpy import zeros, sign
-from math import exp, log
-from collections import defaultdict
 from torch.utils.data import Dataset, DataLoader
 from sklearn.model_selection import train_test_split
 
@@ -32,11 +27,13 @@ vocab = [[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 2], [0, 0, 1, 0], [0, 0, 1, 1], [
  [2, 2, 2, 0], [2, 2, 2, 1], [2, 2, 2, 2]]
 
 
-class SportsDataset(Dataset):
+class LangDataset(Dataset):
     def __init__(self, data):
         self.n_samples, self.n_features = data.shape
         # The first column is label, the rest are the features
         self.n_features -= 1
+
+        assert (self.n_samples, self.n_features) == (240, 81)
         self.feature = torch.from_numpy(data[:, 1:].astype(np.float32)) # size [n_samples, n_features]
         self.label = torch.from_numpy(data[:, [0]].astype(np.float32)) # size [n_samples, 1]
 
@@ -47,11 +44,6 @@ class SportsDataset(Dataset):
     # we can call len(dataset) to return the size
     def __len__(self):
         return self.n_samples
-
-# def read_vocab(vocab_file):
-#     vocab = [str(x).split("\t")[0] for x in vocab_file.readlines() if '\t' in x]
-#     print("Loaded vocab with %i terms" % len(vocab))
-#     return vocab
 
 def pcap_to_lengths(pcap_file) -> [int]:
     length = []
@@ -74,12 +66,12 @@ def lengths_to_tokens(lengths: [int]) -> [int]:
     max_length = max(lengths)      # largest
 
     for i in range(len(lengths)):
-        if lengths[i] == min_length or lengths[i] == min_length:
+        if lengths[i] == min_length or lengths[i] == min_length2:
             lengths[i] = 0
         elif lengths[i] == max_length:
-            lengths[i] == 2
+            lengths[i] = 2
         else:
-            lengths[i] == 1
+            lengths[i] = 1
     
     return lengths
 
@@ -135,8 +127,8 @@ def read_dataset(lang1, lang2):
     of the count in vocab
 
     """
-    directory1 = Path("path/to/" + lang1)
-    directory2 = Path("path/to/" + lang2) 
+    directory1 = Path(lang1)
+    directory2 = Path(lang2)
 
     matrix = [] # 2D array
 
@@ -146,20 +138,20 @@ def read_dataset(lang1, lang2):
     pcap_files2 = [file for file in directory2.iterdir()]
 
     # convert pcaps to lengths
-    lang1_lengths = map(pcap_to_lengths, pcap_files1)
-    lang2_lengths = map(pcap_to_lengths, pcap_files2)
+    lang1_lengths = [pcap_to_lengths(f) for f in pcap_files1]
+    lang2_lengths = [pcap_to_lengths(f) for f in pcap_files2]
 
     # convert lengths to tokens
-    lang1_tokens = map(lengths_to_tokens, lang1_lengths)
-    lang2_tokens = map(lengths_to_tokens, lang2_lengths)
+    lang1_tokens = [lengths_to_tokens(l) for l in lang1_lengths]
+    lang2_tokens = [lengths_to_tokens(l) for l in lang2_lengths]
 
     # convert tokens to tuples
-    lang1_tuples = map(tokens_to_tuples, lang1_tokens)
-    lang2_tuples = map(tokens_to_tuples, lang2_tokens)
+    lang1_tuples = [tokens_to_tuples(l) for l in lang1_tokens]
+    lang2_tuples = [tokens_to_tuples(l) for l in lang2_tokens]
 
     # convert tuples to counts of each sample to insert into matrix -> [{int: int}]
-    lang1_counts = map(count_tuples, lang1_tuples)
-    lang2_counts = map(count_tuples, lang2_tuples)
+    lang1_counts = [count_tuples(t) for t in lang1_tuples]
+    lang2_counts = [count_tuples(t) for t in lang2_tuples]
 
     # create the matrix
     for i in range(len(vocab)): 
@@ -243,12 +235,10 @@ def step(epoch, ex, model, optimizer, criterion, inputs, labels):
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     #''' Switch between the toy and REAL EXAMPLES
-    argparser.add_argument("--positive", help="Positive class",
-                           type=str, default="../logreg/data/positive")
-    argparser.add_argument("--negative", help="Negative class",
-                           type=str, default="../logreg/data/negative")
-    argparser.add_argument("--vocab", help="Vocabulary that can be features",
-                           type=str, default="../logreg/data/vocab")
+    argparser.add_argument("--lang1", help="Language 1 class",
+                           type=str, default="./data/englishpcaps")
+    argparser.add_argument("--lang2", help="Language 2 class",
+                           type=str, default="./data/spanishpcaps")
     argparser.add_argument("--passes", help="Number of passes through train",
                            type=int, default=5)
     argparser.add_argument("--batch", help="Number of items in each batch",
@@ -258,21 +248,15 @@ if __name__ == "__main__":
 
     args = argparser.parse_args()
 
-    sportsdata = read_dataset(open(args.positive), open(args.negative), open(args.vocab))
+    langdata = read_dataset(args.lang1, args.lang2)
     """
     each row is the count of each 
     first column is the language type
     
     """
-    sportsdata = np.array([
-      [0, 0, 3, 5, 123, 6, 765, 987, 23, 34, 654, 76],
-      [0, 5, 32, 12, 4, 11, 76, 8, 43, 2, 6, 1],
-      [1, 12, 3, 5, 123, 6, 75, 87, 23, 34, 64, 76],
-      [1, 69, 32, 112, 544, 12, 76, 9, 43, 2, 6, 1221],
-    ])
 
-    train_np, test_np = train_test_split(sportsdata, test_size=0.15, random_state=1234)
-    train, test = SportsDataset(train_np), SportsDataset(test_np)
+    train_np, test_np = train_test_split(langdata, test_size=0.15, random_state=1234)
+    train, test = LangDataset(train_np), LangDataset(test_np)
 
     print("Read in %i train and %i test" % (len(train), len(test)))
 
