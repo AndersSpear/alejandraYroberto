@@ -11,20 +11,20 @@ import argparse
 
 torch.manual_seed(1701)
 
-vocab = [[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 2], [0, 0, 1, 0], [0, 0, 1, 1], [0, 0, 1, 2],
- [0, 0, 2, 0], [0, 0, 2, 1], [0, 0, 2, 2], [0, 1, 0, 0], [0, 1, 0, 1], [0, 1, 0, 2],
- [0, 1, 1, 0], [0, 1, 1, 1], [0, 1, 1, 2], [0, 1, 2, 0], [0, 1, 2, 1], [0, 1, 2, 2],
- [0, 2, 0, 0], [0, 2, 0, 1], [0, 2, 0, 2], [0, 2, 1, 0], [0, 2, 1, 1], [0, 2, 1, 2],
- [0, 2, 2, 0], [0, 2, 2, 1], [0, 2, 2, 2], [1, 0, 0, 0], [1, 0, 0, 1], [1, 0, 0, 2],
- [1, 0, 1, 0], [1, 0, 1, 1], [1, 0, 1, 2], [1, 0, 2, 0], [1, 0, 2, 1], [1, 0, 2, 2],
- [1, 1, 0, 0], [1, 1, 0, 1], [1, 1, 0, 2], [1, 1, 1, 0], [1, 1, 1, 1], [1, 1, 1, 2],
- [1, 1, 2, 0], [1, 1, 2, 1], [1, 1, 2, 2], [1, 2, 0, 0], [1, 2, 0, 1], [1, 2, 0, 2],
- [1, 2, 1, 0], [1, 2, 1, 1], [1, 2, 1, 2], [1, 2, 2, 0], [1, 2, 2, 1], [1, 2, 2, 2],
- [2, 0, 0, 0], [2, 0, 0, 1], [2, 0, 0, 2], [2, 0, 1, 0], [2, 0, 1, 1], [2, 0, 1, 2],
- [2, 0, 2, 0], [2, 0, 2, 1], [2, 0, 2, 2], [2, 1, 0, 0], [2, 1, 0, 1], [2, 1, 0, 2],
- [2, 1, 1, 0], [2, 1, 1, 1], [2, 1, 1, 2], [2, 1, 2, 0], [2, 1, 2, 1], [2, 1, 2, 2],
- [2, 2, 0, 0], [2, 2, 0, 1], [2, 2, 0, 2], [2, 2, 1, 0], [2, 2, 1, 1], [2, 2, 1, 2],
- [2, 2, 2, 0], [2, 2, 2, 1], [2, 2, 2, 2]]
+vocab = [(0, 0, 0, 0), (0, 0, 0, 1), (0, 0, 0, 2), (0, 0, 1, 0), (0, 0, 1, 1), (0, 0, 1, 2),
+ (0, 0, 2, 0), (0, 0, 2, 1), (0, 0, 2, 2), (0, 1, 0, 0), (0, 1, 0, 1), (0, 1, 0, 2),
+ (0, 1, 1, 0), (0, 1, 1, 1), (0, 1, 1, 2), (0, 1, 2, 0), (0, 1, 2, 1), (0, 1, 2, 2),
+ (0, 2, 0, 0), (0, 2, 0, 1), (0, 2, 0, 2), (0, 2, 1, 0), (0, 2, 1, 1), (0, 2, 1, 2),
+ (0, 2, 2, 0), (0, 2, 2, 1), (0, 2, 2, 2), (1, 0, 0, 0), (1, 0, 0, 1), (1, 0, 0, 2),
+ (1, 0, 1, 0), (1, 0, 1, 1), (1, 0, 1, 2), (1, 0, 2, 0), (1, 0, 2, 1), (1, 0, 2, 2),
+ (1, 1, 0, 0), (1, 1, 0, 1), (1, 1, 0, 2), (1, 1, 1, 0), (1, 1, 1, 1), (1, 1, 1, 2),
+ (1, 1, 2, 0), (1, 1, 2, 1), (1, 1, 2, 2), (1, 2, 0, 0), (1, 2, 0, 1), (1, 2, 0, 2),
+ (1, 2, 1, 0), (1, 2, 1, 1), (1, 2, 1, 2), (1, 2, 2, 0), (1, 2, 2, 1), (1, 2, 2, 2),
+ (2, 0, 0, 0), (2, 0, 0, 1), (2, 0, 0, 2), (2, 0, 1, 0), (2, 0, 1, 1), (2, 0, 1, 2),
+ (2, 0, 2, 0), (2, 0, 2, 1), (2, 0, 2, 2), (2, 1, 0, 0), (2, 1, 0, 1), (2, 1, 0, 2),
+ (2, 1, 1, 0), (2, 1, 1, 1), (2, 1, 1, 2), (2, 1, 2, 0), (2, 1, 2, 1), (2, 1, 2, 2),
+ (2, 2, 0, 0), (2, 2, 0, 1), (2, 2, 0, 2), (2, 2, 1, 0), (2, 2, 1, 1), (2, 2, 1, 2),
+ (2, 2, 2, 0), (2, 2, 2, 1), (2, 2, 2, 2)]
 
 
 class LangDataset(Dataset):
@@ -62,7 +62,7 @@ def lengths_to_tokens(lengths: [int]) -> [int]:
     lengths_mod.remove(min(lengths_mod))
 
     min_length2 = min(lengths_mod) # second smallest
-    min_length = min(lengths)      # smallest  
+    min_length = min(lengths)      # smallest
     max_length = max(lengths)      # largest
 
     for i in range(len(lengths)):
@@ -72,7 +72,7 @@ def lengths_to_tokens(lengths: [int]) -> [int]:
             lengths[i] = 2
         else:
             lengths[i] = 1
-    
+
     return lengths
 
 def tokens_to_tuples(tokens: [int]) -> [(int, int, int, int)]:
@@ -154,7 +154,7 @@ def read_dataset(lang1, lang2):
     lang2_counts = [count_tuples(t) for t in lang2_tuples]
 
     # create the matrix
-    for i in range(len(vocab)): 
+    for i in range(len(vocab)):
         sample_count1 = [0] * (len(vocab) + 1)
         sample_count2 = [0] * (len(vocab) + 1)
         # class = 0 for lang1, class = 1 for lang2
@@ -166,7 +166,7 @@ def read_dataset(lang1, lang2):
         # add both arrays to the matrix
         matrix.append(sample_count1)
         matrix.append(sample_count2)
-    
+
     return matrix
 
 class SimpleLogreg(nn.Module):
@@ -236,9 +236,9 @@ if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     #''' Switch between the toy and REAL EXAMPLES
     argparser.add_argument("--lang1", help="Language 1 class",
-                           type=str, default="./data/englishpcaps")
+                           type=str, default="./data/smallenglish")
     argparser.add_argument("--lang2", help="Language 2 class",
-                           type=str, default="./data/spanishpcaps")
+                           type=str, default="./data/smallspanish")
     argparser.add_argument("--passes", help="Number of passes through train",
                            type=int, default=5)
     argparser.add_argument("--batch", help="Number of items in each batch",
@@ -268,8 +268,8 @@ if __name__ == "__main__":
     total_samples = len(train)
 
     # Replace these with the correct loss and optimizer
-    criterion = None
-    optimizer = None
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(logreg.parameters(), lr=args.learnrate)
     
     train_loader = DataLoader(dataset=train,
                               batch_size=batch,
