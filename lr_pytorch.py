@@ -4,6 +4,7 @@ import pyshark
 import torch
 import torch.nn as nn
 import numpy as np
+from numpy import zeros
 from torch.utils.data import Dataset, DataLoader
 from sklearn.model_selection import train_test_split
 
@@ -85,11 +86,11 @@ def tokens_to_tuples(tokens: [int]) -> [(int, int, int, int)]:
     return tuples
 
 
-def count_tuples(words: [(int, int, int, int)]) -> {int: int}:
+def count_tuples(words: [(int, int, int, int)]) -> [int]:
     # return type is {int: int} where key is index of tuple in vocab and value is the count
-    count = {}
+    count = []
     for i in range(len(vocab)):
-        count[i] = words.count(vocab[i])
+        count.append(words.count(vocab[i]))
 
     return count
 
@@ -152,6 +153,18 @@ def read_dataset(lang1, lang2):
     # convert tuples to counts of each sample to insert into matrix -> [{int: int}]
     lang1_counts = [count_tuples(t) for t in lang1_tuples]
     lang2_counts = [count_tuples(t) for t in lang2_tuples]
+
+    final = zeros((len(lang1_counts) + len(lang2_counts), (len(vocab) + 1)))
+
+    final[:len(lang1_counts), 1:] = np.asmatrix(lang1_counts)
+    final[:len(lang1_counts), 1] = 0
+
+    final[len(lang1_counts):, 1:] = lang2_counts
+    final[len(lang1_counts):, 1] = 1
+
+    lang1_m = np.asmatrix(lang1_counts)
+    lang2_m = np.asmatrix(lang2_counts)
+
 
     # create the matrix
     for i in range(len(vocab)):
