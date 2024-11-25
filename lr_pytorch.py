@@ -190,15 +190,10 @@ class SimpleLogreg(nn.Module):
         :param num_features: The number of features in the linear model
         """
         super(SimpleLogreg, self).__init__()
-        self.linear = nn.Linear(num_features, 1)
+        self.linear = nn.Linear(num_features, 2)
 
     def forward(self, x):
-        """
-        Compute the model prediction for an example.
-
-        :param x: Example to evaluate
-        """
-        return torch.sigmoid(self.linear(x))
+        return self.linear(x)
 
     def evaluate(self, data):
         with torch.no_grad():
